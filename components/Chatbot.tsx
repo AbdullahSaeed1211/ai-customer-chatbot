@@ -1,7 +1,7 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import logo from '@/public/chatbotlogo.png';
+import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
 type Message = {
   text: string;
@@ -17,7 +17,7 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     // Add the default message when the component mounts
     const defaultMessage: Message = {
-      text: "Hi there! I'm your AI MMA coach. I have in-depth knowledge of various fighting techniques, training regimens, and strategies. How can I assist you today?",
+      text: "Hi there! I'm your AI MMA coach. How can I assist you today?",
       sender: 'bot',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
     };
@@ -29,26 +29,45 @@ const Chatbot: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage: Message = {
-      text: input,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
-    };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setInput('');
+    try {
+      const response = await fetch('api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          userPrompt: input,
+          history: messages
+        }),
+      });
 
-    // Simulate bot response
-    setTimeout(() => {
+      const data = await response.json();
+      const userMessage: Message = {
+        text: input,
+        sender: 'user',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
+      };
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setInput('');
+      
       const botMessage: Message = {
-        text: `You said: ${input}`,
+        text: data.text,
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }, 500);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage: Message = {
+        text: 'Sorry, something went wrong. Please try again later.',
+        sender: 'bot',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
+      };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    }
   };
 
   return (
