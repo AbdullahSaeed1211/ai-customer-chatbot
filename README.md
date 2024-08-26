@@ -1,1 +1,1 @@
-# AI Customer Support
+# StrikeMMA AI Customer Support/Coach

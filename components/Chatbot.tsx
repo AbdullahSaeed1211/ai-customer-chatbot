@@ -17,7 +17,7 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     // Add the default message when the component mounts
     const defaultMessage: Message = {
-      text: "Hi there! I'm your AI MMA coach. How can I assist you today?",
+      text: "Hi! I'm your virtual MMA coach. How can I assist you today?",
       sender: 'bot',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Format timestamp to show hours and minutes
     };
@@ -70,10 +70,17 @@ const Chatbot: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevents the default action of form submission
+      handleSend();
+    }
+  };
+
   return (
     <div className="h-full flex flex-col w-full max-w-md md:h-[600px] border border-gray-300 rounded-lg bg-gray-50 overflow-hidden">
       <div className="p-4 bg-gray-200 border-b border-gray-300 text-center font-bold">
-        Chat with your AI MMA Coach
+        StrikeMMA Chatbot
       </div>
       <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 md:scrollbar-thumb-gray-500 lg:scrollbar-thumb-gray-600">
         {messages.map((message, index) => (
@@ -116,6 +123,7 @@ const Chatbot: React.FC = () => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}  // Add this line to handle the "Enter" key
           placeholder="Type your message..."
           className="flex-1 p-2 border border-gray-300 rounded-full outline-none focus:border-blue-500"
         />

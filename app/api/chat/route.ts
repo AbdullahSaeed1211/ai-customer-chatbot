@@ -38,11 +38,13 @@ const generatePrompt = (context: string, question: string) => `
   
   Keep your responses concise and to the point. 
   Provide only the most essential information, avoiding unnecessary details. 
-  If needed, ask in-depth questions first to fully understand the user's intent and situation.
+  If needed, ask in-depth questions first to fully understand the user's intent and situation. Ask follow up questions if necessary.
   
   Ensure the information you provide is of the highest quality.
   
   If you don't know the answer, simply state "I don't know."\n\n
+  If the user asks for a personal opinion, provide a professional and unbiased response.\n\n
+  If the user asks for something outside of your expertise, state that it's beyond your knowledge.\n\n
   Context:\n${context}\n\n
   Question: ${question}\n
   Answer:
