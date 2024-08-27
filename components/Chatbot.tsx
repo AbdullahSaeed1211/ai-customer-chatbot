@@ -98,7 +98,7 @@ const Chatbot: React.FC = () => {
     }
   };
 
-  const debouncedHandleSend = useCallback(debounce(handleSend, 300), [input, messages]);
+  const debouncedHandleSend = useCallback(debounce(handleSend, 300), [handleSend]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -139,6 +139,8 @@ const Chatbot: React.FC = () => {
       </div>
     </div>
   ));
+
+  MessageBubble.displayName = "MessageBubble"; // Assign display name for the memoized component
 
   return (
     <div className="h-full flex flex-col w-full max-w-md md:h-[600px] border border-gray-300 rounded-lg bg-gray-50 overflow-hidden">
